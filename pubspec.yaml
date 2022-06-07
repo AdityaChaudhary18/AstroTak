@@ -61,7 +61,7 @@ flutter:
   fonts:
     - family: WorkSans
       fonts:
-        - asset: fonts/WorkSans-VariableFont_wght.ttf
+        - asset: fonts/WorkSans.ttf
     - family: Verdana
       fonts:
         - asset: Fonts/verdana-regular.ttf
