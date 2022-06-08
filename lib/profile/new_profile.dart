@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-
+import 'package:http/http.dart' as http;
 import '../constants.dart';
 
 class NewProfile extends StatefulWidget {
@@ -20,11 +22,17 @@ class _NewProfileState extends State<NewProfile> {
   final pobController = TextEditingController();
   final formGlobalKey = GlobalKey<FormState>();
 
-  List<String> _gender = ['Male', 'Female', 'Other', ""]; // Option 2
+  List<String> _gender = ['MALE', 'FEMALE', 'Other', ""]; // Option 2
   int _selectedIndex = 0;
   String _selectedLocation = "";
 
-  List<String> _relation = ['Married', 'Single', ""]; // Option 2
+  List<String> _relation = [
+    'Daughter',
+    'Son',
+    "Father",
+    "Mother",
+    ""
+  ]; // Option 2
   int _selectedIndex2 = 0;
   String _selectedLocation2 = "";
 
@@ -33,6 +41,57 @@ class _NewProfileState extends State<NewProfile> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void getLocationToken() async {
+    var client = http.Client();
+
+    final response = await http.get(
+      Uri.https("staging-api.astrotak.com",
+          "api/location/place?inputPlace=${pobController.value.text}"),
+    );
+
+    final body = json.decode(response.body);
+    print(body["data"][0]["placeId"]);
+  }
+
+  void addProfile() async {
+    String token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IkFHRU5UIiwidXVpZCI6ImIyYWViYjMwLThmM2YtMTFlYy05Y2I2LWY3ZTNmNjY2YTIyMyIsImlzRW1haWxWZXJpZmllZCI6dHJ1ZSwicGhvbmVOdW1iZXIiOiI5NzExMTgxMTk4IiwiZW1haWwiOiJyYWtlc2hzaGFybWEuamFpQGdtYWlsLmNvbSIsIm1hc2tlZEVtYWlsIjoicmFrKioqKioqKioqKioqKmdtYWlsLmNvbSIsImV4aXN0aW5nVXNlciI6ZmFsc2UsImlhdCI6MTY0Nzk0NTA0MSwiZXhwIjoxNjY3OTQ1MDQxfQ.Ng9sm0iJbY7_8BALAq31092He6gOIkmWUMw1dwzsg2E";
+
+    var client = http.Client();
+
+    try {
+      var response = await client
+          .post(Uri.https('staging-api.astrotak.com', 'api/relative'),
+              body: jsonEncode({
+                "birthDetails": {
+                  "dobDay": dateController.value.text,
+                  "dobMonth": monthController.value.text,
+                  "dobYear": yearController.value.text,
+                  "tobHour": hourController.value.text,
+                  "tobMin": minuteController.value.text,
+                  "meridiem": selectedAm ? "AM" : "PM"
+                },
+                "birthPlace": {
+                  "placeName": pobController.value.text,
+                  "placeId": "ChIJwTa3v_6nkjkRC_b2yajUF_M"
+                },
+                "firstName": NameController.value.text,
+                "lastName": NameController.value.text,
+                "relationId": _selectedIndex2,
+                "gender": _gender[_selectedIndex]
+              }),
+              headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          });
+      print(response.body);
+    } finally {
+      client.close();
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -485,7 +544,12 @@ class _NewProfileState extends State<NewProfile> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.orange),
-                        onPressed: () {},
+                        onPressed: () {
+                          // if (formGlobalKey.currentState!.validate()) {
+                          getLocationToken();
+                          // addProfile();
+                          // }
+                        },
                         child: Text("Save Changes"),
                       ),
                     )
