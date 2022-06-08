@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import '../constants.dart';
+import 'constants.dart';
 
-class NewProfile extends StatefulWidget {
-  const NewProfile({Key? key}) : super(key: key);
+class EditProfile extends StatefulWidget {
+  const EditProfile({Key? key}) : super(key: key);
 
   @override
-  State<NewProfile> createState() => _NewProfileState();
+  State<EditProfile> createState() => _EditProfileState();
 }
 
-class _NewProfileState extends State<NewProfile> {
+class _EditProfileState extends State<EditProfile> {
   final NameController = TextEditingController();
   final dateController = TextEditingController();
   final monthController = TextEditingController();

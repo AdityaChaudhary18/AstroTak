@@ -1,5 +1,7 @@
+import 'package:astrotak/models/Database_Service.dart';
 import 'package:astrotak/profile/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
@@ -31,6 +33,13 @@ class _HomeState extends State<Home> {
   }
 
   String _selectedLocation = "Please select an Option"; // Option 2
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<DatabaseService>(context, listen: false).fetchUserList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

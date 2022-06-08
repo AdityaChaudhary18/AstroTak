@@ -1,4 +1,8 @@
+import 'package:astrotak/home.dart';
+import 'package:astrotak/models/Database_Service.dart';
+import 'package:astrotak/profile/new_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class FamilyProfile extends StatefulWidget {
@@ -11,6 +15,7 @@ class FamilyProfile extends StatefulWidget {
 class _FamilyProfileState extends State<FamilyProfile> {
   @override
   Widget build(BuildContext context) {
+    List users = Provider.of<DatabaseService>(context).userList;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -107,29 +112,32 @@ class _FamilyProfileState extends State<FamilyProfile> {
                             vertical: 3.h, horizontal: 1.w),
                         child: Row(
                           children: [
-                            Text(
-                              "Mohit Kr",
-                              style: TextStyle(color: Colors.grey),
+                            Container(
+                              child: Text(
+                                "${users[index]["firstName"]}",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              width: 15.w,
                             ),
                             SizedBox(
                               width: 2.w,
                             ),
                             Text(
-                              "11-8-1194",
+                              "${users[index]["birthDetails"]["dobDay"]}-${users[index]["birthDetails"]["dobMonth"]}-${users[index]["birthDetails"]["dobYear"]}",
                               style: TextStyle(color: Colors.grey),
                             ),
                             SizedBox(
                               width: 3.w,
                             ),
                             Text(
-                              "8:30",
+                              "${users[index]["birthDetails"]["tobHour"]}:${users[index]["birthDetails"]["tobMin"]}",
                               style: TextStyle(color: Colors.grey),
                             ),
                             SizedBox(
                               width: 2.w,
                             ),
                             Text(
-                              "Brother",
+                              "${users[index]["relation"]}",
                               style: TextStyle(color: Colors.grey),
                             ),
                             SizedBox(
@@ -157,14 +165,17 @@ class _FamilyProfileState extends State<FamilyProfile> {
                       ),
                     );
                   },
-                  itemCount: 2,
+                  itemCount: users.length,
                 ),
               ),
               Align(
                 alignment: Alignment.center,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Colors.orange),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => NewProfile()));
+                  },
                   child: Text("+ Add New Profile"),
                 ),
               )
