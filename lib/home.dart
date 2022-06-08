@@ -1,3 +1,4 @@
+import 'package:astrotak/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -94,13 +95,19 @@ class _HomeState extends State<Home> {
           ),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 2.w),
-            child: Container(
-              alignment: Alignment.center,
-              child: Image.asset(
-                'images/profile.png',
-                height: 30,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Profile()));
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: 2.w),
+              child: Container(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  'images/profile.png',
+                  height: 30,
+                ),
               ),
             ),
           )
@@ -201,6 +208,7 @@ class _HomeState extends State<Home> {
                     height: 3.h,
                   ),
                   TextFormField(
+                    textAlignVertical: TextAlignVertical.top,
                     maxLength: 150,
                     maxLines: 4,
                     decoration: const InputDecoration(
