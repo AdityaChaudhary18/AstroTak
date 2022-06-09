@@ -43,23 +43,21 @@ class _NewProfileState extends State<NewProfile> {
     super.initState();
   }
 
-  void getLocationToken() async {
-    var client = http.Client();
-
-    final response = await http.get(
-      Uri.https("staging-api.astrotak.com",
-          "api/location/place?inputPlace=${pobController.value.text}"),
-    );
-
-    final body = json.decode(response.body);
-    print(body["data"][0]["placeId"]);
-  }
+  late String locationId;
 
   void addProfile() async {
+    var client = http.Client();
+
+    final response1 = await http.get(
+      Uri.parse(
+          "https://staging-api.astrotak.com/api/location/place?inputPlace=${pobController.value.text}"),
+    );
+
+    final body1 = json.decode(response1.body);
+    locationId = body1["data"][0]["placeId"];
+
     String token =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IkFHRU5UIiwidXVpZCI6ImIyYWViYjMwLThmM2YtMTFlYy05Y2I2LWY3ZTNmNjY2YTIyMyIsImlzRW1haWxWZXJpZmllZCI6dHJ1ZSwicGhvbmVOdW1iZXIiOiI5NzExMTgxMTk4IiwiZW1haWwiOiJyYWtlc2hzaGFybWEuamFpQGdtYWlsLmNvbSIsIm1hc2tlZEVtYWlsIjoicmFrKioqKioqKioqKioqKmdtYWlsLmNvbSIsImV4aXN0aW5nVXNlciI6ZmFsc2UsImlhdCI6MTY0Nzk0NTA0MSwiZXhwIjoxNjY3OTQ1MDQxfQ.Ng9sm0iJbY7_8BALAq31092He6gOIkmWUMw1dwzsg2E";
-
-    var client = http.Client();
 
     try {
       var response = await client
@@ -75,11 +73,11 @@ class _NewProfileState extends State<NewProfile> {
                 },
                 "birthPlace": {
                   "placeName": pobController.value.text,
-                  "placeId": "ChIJwTa3v_6nkjkRC_b2yajUF_M"
+                  "placeId": locationId
                 },
                 "firstName": NameController.value.text,
                 "lastName": NameController.value.text,
-                "relationId": _selectedIndex2,
+                "relationId": _selectedIndex2 + 1,
                 "gender": _gender[_selectedIndex]
               }),
               headers: {
@@ -545,10 +543,9 @@ class _NewProfileState extends State<NewProfile> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.orange),
                         onPressed: () {
-                          // if (formGlobalKey.currentState!.validate()) {
-                          getLocationToken();
-                          // addProfile();
-                          // }
+                          if (formGlobalKey.currentState!.validate()) {
+                            addProfile();
+                          }
                         },
                         child: Text("Save Changes"),
                       ),
