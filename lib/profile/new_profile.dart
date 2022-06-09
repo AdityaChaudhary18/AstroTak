@@ -106,7 +106,8 @@ class _NewProfileState extends State<NewProfile> {
         "firstName": NameController.value.text,
         "lastName": NameController.value.text,
         "relationId": _selectedIndex2 + 1,
-        "gender": _gender[_selectedIndex]
+        "gender": _gender[_selectedIndex],
+        "relation": "Father"
       });
     } finally {
       client.close();
