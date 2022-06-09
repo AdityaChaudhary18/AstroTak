@@ -1,3 +1,4 @@
+import 'package:astrotak/edit_profile.dart';
 import 'package:astrotak/home.dart';
 import 'package:astrotak/models/Database_Service.dart';
 import 'package:astrotak/profile/new_profile.dart';
@@ -144,7 +145,13 @@ class _FamilyProfileState extends State<FamilyProfile> {
                               width: 5.w,
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditProfile(data: users[index])));
+                              },
                               child: Icon(
                                 Icons.edit,
                                 color: Colors.orange,

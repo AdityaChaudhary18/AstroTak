@@ -1,37 +1,115 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-
+import 'package:http/http.dart' as http;
 import 'constants.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+  final data;
+  EditProfile({required this.data});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
-  final NameController = TextEditingController();
-  final dateController = TextEditingController();
-  final monthController = TextEditingController();
-  final yearController = TextEditingController();
-  final hourController = TextEditingController();
-  final minuteController = TextEditingController();
-  final pobController = TextEditingController();
-  final formGlobalKey = GlobalKey<FormState>();
+  late final NameController;
+  late final dateController;
+  late final monthController;
+  late final yearController;
+  late final hourController;
+  late final minuteController;
+  late final pobController;
+  late final formGlobalKey = GlobalKey<FormState>();
 
   List<String> _gender = ['Male', 'Female', 'Other', ""]; // Option 2
   int _selectedIndex = 0;
   String _selectedLocation = "";
 
-  List<String> _relation = ['Married', 'Single', ""]; // Option 2
+  List<String> _relation = [
+    'Daughter',
+    'Brother',
+    "Son",
+    "Father",
+    "Wife",
+    "Husband",
+    ""
+  ]; // Option 2
   int _selectedIndex2 = 0;
   String _selectedLocation2 = "";
 
   bool selectedAm = true;
   bool selectedBasicProfile = true;
+
+  void updateUserData() async {
+    var client = http.Client();
+    String token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IkFHRU5UIiwidXVpZCI6ImIyYWViYjMwLThmM2YtMTFlYy05Y2I2LWY3ZTNmNjY2YTIyMyIsImlzRW1haWxWZXJpZmllZCI6dHJ1ZSwicGhvbmVOdW1iZXIiOiI5NzExMTgxMTk4IiwiZW1haWwiOiJyYWtlc2hzaGFybWEuamFpQGdtYWlsLmNvbSIsIm1hc2tlZEVtYWlsIjoicmFrKioqKioqKioqKioqKmdtYWlsLmNvbSIsImV4aXN0aW5nVXNlciI6ZmFsc2UsImlhdCI6MTY0Nzk0NTA0MSwiZXhwIjoxNjY3OTQ1MDQxfQ.Ng9sm0iJbY7_8BALAq31092He6gOIkmWUMw1dwzsg2E";
+
+    try {
+      var response = await client.post(
+          Uri.https('staging-api.astrotak.com',
+              'api/relative/update/${widget.data["uuid"]}'),
+          body: jsonEncode({
+            "uuid": widget.data["uuid"],
+            "relation": _relation[_selectedIndex2],
+            "relationId": _selectedIndex2,
+            "firstName": NameController.value.text,
+            "middleName": null,
+            "lastName": NameController.value.text,
+            "fullName": NameController.value.text,
+            "gender": _gender[_selectedIndex],
+            "dateAndTimeOfBirth":
+                "${yearController.value.text}-${monthController.value.text}-${dateController.value.text} ${hourController.value.text}:${minuteController.value.text}",
+            "birthDetails": {
+              "dobYear": int.parse(yearController.value.text),
+              "dobMonth": int.parse(monthController.value.text),
+              "dobDay": int.parse(dateController.value.text),
+              "tobHour": int.parse(hourController.value.text),
+              "tobMin": int.parse(minuteController.value.text),
+              "meridiem": selectedAm ? "AM" : "PM"
+            },
+            "birthPlace": {
+              "placeName": pobController.value.text,
+              "placeId": widget.data["birthPlace"]["placeId"]
+            }
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          });
+      print(response.body);
+    } finally {
+      client.close();
+      Navigator.pop(context);
+    }
+  }
+
   @override
   void initState() {
+    NameController =
+        TextEditingController(text: widget.data["firstName"].toString());
+
+    dateController = TextEditingController(
+        text: widget.data["birthDetails"]["dobDay"].toString());
+
+    monthController = TextEditingController(
+        text: widget.data["birthDetails"]["dobMonth"].toString());
+
+    yearController = TextEditingController(
+        text: widget.data["birthDetails"]["dobYear"].toString());
+
+    hourController = TextEditingController(
+        text: widget.data["birthDetails"]["tobHour"].toString());
+
+    minuteController = TextEditingController(
+        text: widget.data["birthDetails"]["tobMin"].toString());
+
+    pobController = TextEditingController(
+        text: widget.data['birthPlace']["placeName"].toString());
+
     super.initState();
   }
 
@@ -485,7 +563,9 @@ class _EditProfileState extends State<EditProfile> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.orange),
-                        onPressed: () {},
+                        onPressed: () {
+                          updateUserData();
+                        },
                         child: Text("Save Changes"),
                       ),
                     )

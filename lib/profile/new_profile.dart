@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:astrotak/models/Database_Service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import '../constants.dart';
@@ -28,9 +30,11 @@ class _NewProfileState extends State<NewProfile> {
 
   List<String> _relation = [
     'Daughter',
-    'Son',
+    'Brother',
+    "Son",
     "Father",
-    "Mother",
+    "Wife",
+    "Husband",
     ""
   ]; // Option 2
   int _selectedIndex2 = 0;
@@ -86,6 +90,24 @@ class _NewProfileState extends State<NewProfile> {
             'Authorization': 'Bearer $token',
           });
       print(response.body);
+      Provider.of<DatabaseService>(context, listen: false).userList.add({
+        "birthDetails": {
+          "dobDay": dateController.value.text,
+          "dobMonth": monthController.value.text,
+          "dobYear": yearController.value.text,
+          "tobHour": hourController.value.text,
+          "tobMin": minuteController.value.text,
+          "meridiem": selectedAm ? "AM" : "PM"
+        },
+        "birthPlace": {
+          "placeName": pobController.value.text,
+          "placeId": locationId
+        },
+        "firstName": NameController.value.text,
+        "lastName": NameController.value.text,
+        "relationId": _selectedIndex2 + 1,
+        "gender": _gender[_selectedIndex]
+      });
     } finally {
       client.close();
       Navigator.pop(context);
