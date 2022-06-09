@@ -5,6 +5,7 @@ import 'package:astrotak/profile/new_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
 
 class FamilyProfile extends StatefulWidget {
   const FamilyProfile({Key? key}) : super(key: key);
@@ -14,6 +15,76 @@ class FamilyProfile extends StatefulWidget {
 }
 
 class _FamilyProfileState extends State<FamilyProfile> {
+  bool selectedBasicProfile = true;
+
+  Future<void> _showMyDialog(String uuid) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text('Do you really want to Delete?'),
+          actions: <Widget>[
+            Container(
+              width: 30.w,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.orange),
+                child: const Text('Yes'),
+                onPressed: () {
+                  deleteItem(uuid);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            Container(
+              width: 30.w,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.orange),
+                child: const Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deleteItem(String uuid) async {
+    var client = http.Client();
+    String token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IkFHRU5UIiwidXVpZCI6ImIyYWViYjMwLThmM2YtMTFlYy05Y2I2LWY3ZTNmNjY2YTIyMyIsImlzRW1haWxWZXJpZmllZCI6dHJ1ZSwicGhvbmVOdW1iZXIiOiI5NzExMTgxMTk4IiwiZW1haWwiOiJyYWtlc2hzaGFybWEuamFpQGdtYWlsLmNvbSIsIm1hc2tlZEVtYWlsIjoicmFrKioqKioqKioqKioqKmdtYWlsLmNvbSIsImV4aXN0aW5nVXNlciI6ZmFsc2UsImlhdCI6MTY0Nzk0NTA0MSwiZXhwIjoxNjY3OTQ1MDQxfQ.Ng9sm0iJbY7_8BALAq31092He6gOIkmWUMw1dwzsg2E";
+
+    try {
+      var response = await client.post(
+          Uri.https('staging-api.astrotak.com', 'api/relative/delete/$uuid'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          });
+
+      Provider.of<DatabaseService>(context, listen: false).userList.removeAt(0);
+      print(response.body);
+    } finally {
+      client.close();
+      var snackBar = SnackBar(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        content: Text('Profile Deleted Successfully'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 10),
+        width: 55.w,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List users = Provider.of<DatabaseService>(context).userList;
@@ -23,6 +94,67 @@ class _FamilyProfileState extends State<FamilyProfile> {
           padding: EdgeInsets.symmetric(horizontal: 3.w),
           child: Column(
             children: [
+              SizedBox(
+                height: 2.h,
+              ),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedBasicProfile = !selectedBasicProfile;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: selectedBasicProfile
+                              ? Colors.orange
+                              : Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(7))),
+                      width: 45.w,
+                      height: 6.h,
+                      child: Center(
+                        child: Text(
+                          "Basic Profile",
+                          style: TextStyle(
+                              color: selectedBasicProfile
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedBasicProfile = !selectedBasicProfile;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: !selectedBasicProfile
+                              ? Colors.orange
+                              : Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(7))),
+                      height: 6.h,
+                      width: 45.w,
+                      child: Center(
+                        child: Text(
+                          "Friends and Famliy Profile",
+                          style: TextStyle(
+                              color: !selectedBasicProfile
+                                  ? Colors.white
+                                  : Colors.black),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 2.h,
+              ),
               Container(
                 decoration: BoxDecoration(
                     color: Colors.indigo.shade100,
@@ -161,7 +293,9 @@ class _FamilyProfileState extends State<FamilyProfile> {
                               width: 7.w,
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                _showMyDialog(users[index]["uuid"]);
+                              },
                               child: Icon(
                                 Icons.delete,
                                 color: Colors.red,

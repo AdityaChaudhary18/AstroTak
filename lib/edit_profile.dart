@@ -83,6 +83,18 @@ class _EditProfileState extends State<EditProfile> {
       print(response.body);
     } finally {
       client.close();
+      var snackBar = SnackBar(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        content: Text('Profile Updated Successfully'),
+        backgroundColor: Colors.grey,
+        duration: Duration(seconds: 10),
+        width: 55.w,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       Navigator.pop(context);
     }
   }
