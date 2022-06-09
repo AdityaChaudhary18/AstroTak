@@ -236,7 +236,7 @@ class _FamilyProfileState extends State<FamilyProfile> {
                 height: 3.h,
               ),
               Container(
-                height: 55.h,
+                height: 50.h,
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     return Card(

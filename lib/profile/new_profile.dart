@@ -279,7 +279,7 @@ class _NewProfileState extends State<NewProfile> {
                       decoration: authTextFieldDecoration.copyWith(),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Please enter value';
+                          return 'Enter Valid Name';
                         }
                         return null;
                       },
@@ -305,7 +305,7 @@ class _NewProfileState extends State<NewProfile> {
                                 hintText: "DD"),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter value';
+                                return 'Invalid DD';
                               }
                               return null;
                             },
@@ -321,7 +321,7 @@ class _NewProfileState extends State<NewProfile> {
                                 hintText: "MM"),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter value';
+                                return 'Invalid MM';
                               }
                               return null;
                             },
@@ -337,7 +337,7 @@ class _NewProfileState extends State<NewProfile> {
                                 hintText: "YYYY"),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter value';
+                                return 'Invalid YYYY';
                               }
                               return null;
                             },
@@ -367,7 +367,7 @@ class _NewProfileState extends State<NewProfile> {
                                 hintText: "HH"),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter value';
+                                return 'Invalid HH';
                               }
                               return null;
                             },
@@ -383,7 +383,7 @@ class _NewProfileState extends State<NewProfile> {
                                 hintText: "MM"),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter value';
+                                return 'Invalid MM';
                               }
                               return null;
                             },
@@ -464,7 +464,7 @@ class _NewProfileState extends State<NewProfile> {
                       decoration: authTextFieldDecoration.copyWith(),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Please enter value';
+                          return 'Please select a city';
                         }
                         return null;
                       },
@@ -500,7 +500,7 @@ class _NewProfileState extends State<NewProfile> {
                           children: [
                             Container(
                               width: 45.w,
-                              height: 6.h,
+                              height: 7.h,
                               child: InputDecorator(
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder()),
@@ -528,7 +528,7 @@ class _NewProfileState extends State<NewProfile> {
                             SizedBox(width: 1.w),
                             Container(
                               width: 45.w,
-                              height: 6.h,
+                              height: 7.h,
                               child: InputDecorator(
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder()),

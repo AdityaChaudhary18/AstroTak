@@ -39,7 +39,7 @@ class _ProfileState extends State<Profile> {
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 1.8.h),
+              padding: EdgeInsets.only(right: 3.w, top: 1.5.h, bottom: 1.5.h),
               child: Container(
                 width: 20.w,
                 decoration: BoxDecoration(

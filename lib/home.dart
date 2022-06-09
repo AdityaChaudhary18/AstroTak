@@ -63,10 +63,13 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.menu),
-        onPressed: () {},
-        backgroundColor: Colors.orange,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 6.h),
+        child: FloatingActionButton(
+          child: Icon(Icons.menu),
+          onPressed: () {},
+          backgroundColor: Colors.orange,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
@@ -145,16 +148,52 @@ class _HomeState extends State<Home> {
       body: Stack(children: [
         Align(
           alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 5.h,
-            decoration: BoxDecoration(
-                color: Color(0xFF4B60BC).withOpacity(1),
-                border: Border.all(),
-                borderRadius: BorderRadius.all(Radius.circular(7))),
-          ),
+          child: ideas.length == 0
+              ? SizedBox(
+                  height: 0,
+                )
+              : Container(
+                  height: 7.h,
+                  decoration: BoxDecoration(
+                      color: Color(0xFF4B60BC),
+                      borderRadius: BorderRadius.all(Radius.circular(7))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 2.w),
+                        child: Text(
+                          "₹ 150 (1 Question on $category)",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 2.w),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7))),
+                          height: 4.h,
+                          width: 25.w,
+                          child: Center(
+                            child: Text(
+                              "Ask Now",
+                              style: TextStyle(
+                                  color: Color(0xFF4B60BC),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 5.h),
+          padding: EdgeInsets.only(bottom: ideas.length == 0 ? 0 : 7.h),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,7 +217,6 @@ class _HomeState extends State<Home> {
                         Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
-                              border: Border.all(),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(7))),
                           height: 3.h,
@@ -230,6 +268,7 @@ class _HomeState extends State<Home> {
                         style: ElevatedButton.styleFrom(primary: Colors.white),
                         child: DropdownButton<String>(
                             value: category,
+                            isExpanded: true,
                             icon: Icon(Icons.keyboard_arrow_down),
                             iconSize: 28,
                             elevation: 20,

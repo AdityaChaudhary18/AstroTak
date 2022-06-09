@@ -211,7 +211,7 @@ class _EditProfileState extends State<EditProfile> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(7))),
                             width: 45.w,
-                            height: 6.h,
+                            height: 7.h,
                             child: Center(
                               child: Text(
                                 "Basic Profile",
@@ -236,7 +236,7 @@ class _EditProfileState extends State<EditProfile> {
                                     : Colors.white,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(7))),
-                            height: 6.h,
+                            height: 7.h,
                             width: 45.w,
                             child: Center(
                               child: Text(
